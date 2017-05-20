@@ -16,6 +16,10 @@ shinyServer(function(input, output, session) {
       if(input$type == "Boxplot"){
         qplot(x = Group, y = X, data = dat, geom = "boxplot") + 
           stat_summary(fun.y=mean, colour="red", size=5, geom="point")
+      } else if (input$type == "Histogram"){
+        qplot(x = X, 
+              data = dat, 
+              facets = ~ Group)
       } else {
         qplot(x = X, data = dat, colour = Group, geom = "density")
       }
@@ -23,6 +27,18 @@ shinyServer(function(input, output, session) {
     
     output$summary <- renderPrint({
       Anova(aov(X~Group, data=data()))
+    })
+    
+    output$posthoc1 <- renderPrint({
+      if(input$posthoc == TRUE){
+        pairwise.t.test(data()$X, data()$Group, p.adjust.method="bonferroni")
+      }
+    })
+    
+    output$posthoc2 <- renderPrint({
+      if(input$posthoc == TRUE){
+        TukeyHSD(aov(X~Group, data=data()))
+      }
     })
    
 })
