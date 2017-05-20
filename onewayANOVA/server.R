@@ -17,9 +17,12 @@ shinyServer(function(input, output, session) {
         qplot(x = Group, y = X, data = dat, geom = "boxplot") + 
           stat_summary(fun.y=mean, colour="red", size=5, geom="point")
       } else if (input$type == "Histogram"){
+        N <- nrow(dat)/3
+        bins <- ceiling(log(2*N) + 1)
         qplot(x = X, 
               data = dat, 
-              facets = ~ Group)
+              facets = ~ Group,
+              bins = bins)
       } else {
         qplot(x = X, data = dat, colour = Group, geom = "density")
       }
@@ -31,7 +34,8 @@ shinyServer(function(input, output, session) {
     
     output$posthoc1 <- renderPrint({
       if(input$posthoc == TRUE){
-        pairwise.t.test(data()$X, data()$Group, p.adjust.method="bonferroni")
+        dat <- data()
+        with(dat, pairwise.t.test(X, Group, p.adjust.method="bonferroni"))
       }
     })
     
