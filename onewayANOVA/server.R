@@ -23,6 +23,17 @@ shinyServer(function(input, output, session) {
               data = dat, 
               facets = ~ Group,
               bins = bins)
+      } else if (input$type == "Means Plot (SE)"){
+        graph_summary <- ddply(dat, c("Group"), 
+                               summarize,
+                               AVERAGE = mean(X),
+                               SE = sqrt(var(X)/length(X)))
+        ggplot(graph_summary)+
+          aes(x=Group, y=AVERAGE, colour=Group)+
+          geom_point()+
+          geom_errorbar(aes(ymax=AVERAGE+SE, ymin=AVERAGE-SE))+
+          scale_x_discrete("Group")+
+          scale_y_continuous("X", limits = c(25,75))
       } else {
         qplot(x = X, data = dat, colour = Group, geom = "density")
       }

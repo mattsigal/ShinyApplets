@@ -2,6 +2,7 @@ library(shiny)
 library(ggplot2)
 library(xtable)
 library(car)
+library(plyr)
 
 shinyUI(pageWithSidebar(
     headerPanel("One-Way Analysis of Variance"),
@@ -10,7 +11,7 @@ shinyUI(pageWithSidebar(
       selectInput("n", label = "Sample Size per Group",
                   choices = c(10,30,100,250), selected = 30),
       selectInput("type", label = "Type of Plot", 
-                  choices = c("Density", "Boxplot", "Histogram"), selected = "Density"),
+                  choices = c("Density", "Boxplot", "Histogram", "Means Plot (SE)"), selected = "Density"),
       sliderInput("m1", label = "Group 1 Mean", min = 40, max = 60, 
                   value = 50, step = 1),
       sliderInput("s1", label = "Group 1 SD", min = 1, max = 10,
